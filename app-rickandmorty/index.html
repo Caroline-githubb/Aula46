@@ -17,8 +17,8 @@
                     <h1>Rick and Morty</h1>
                     <h2>Personagens</h2>
                     <ul id="personagens" class="list-group-item"></ul>
-                    <h2>Episodio</h2>
-                    <li id="episodios" class="list-group-item"></li>
+                    <h2>Episodios</h2>
+                    <ul id="episodios" class="list-group-item"></ul>
                 </article>
             </div>
         </div>
@@ -26,22 +26,21 @@
 
     <nav aria-label="Page navigation example">
         <ul class="pagination">
-          <li class="page-item"><a class="page-link" href="https://rickandmortyapi.com/api/character/?page=2">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">2</a></li>
-          <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            <li id="next" class="page-item" onclick="clickPaginacao(this, event)" ><a class="page-link" href="#">Next</a></li>
+            <li id="prev" class="page-item" onclick="clickPaginacao(this, event)"><a class="page-link" href="#">Prev</a></li>
         </ul>
-      </nav>
-    
+    </nav>
+
 
     <script type="text/javascript">
         // Implemente a comunicação com servidor via HTTP
         // Method GET
 
         // https://rickandmortyapi.com/api/character
-        
-        requererTodosPersonagens();
-        requererTodosEpisodios();
 
+        requererTodosPersonagens();
+        requererTodosEpisodios('https://rickandmortyapi.com/api/episode');
+        
         async function requererTodosPersonagens() {
             let respostaPersonagem = await fetch('https://rickandmortyapi.com/api/character');
 
@@ -51,10 +50,14 @@
         }
 
         // https://rickandmortyapi.com/api/character
-        async function requererTodosEpisodios() {
-            let respostaEpisodio = await fetch('https://rickandmortyapi.com/api/episode');
+        async function requererTodosEpisodios(url) {
+          
+            let respostaEpisodio = await fetch(url);
 
             let respostaJSON = await respostaEpisodio.json();
+
+            next.url = respostaJSON.info.next;
+            prev.url = respostaJSON.info.prev;
 
             criarListaDeEpisodios(respostaJSON);
         }
@@ -62,22 +65,26 @@
         // Funções que deverão ser executadas a partir da resposta do servidor
         function criarListaDePersonagens(character) {
             // Criar um elemento <li class="list-group-item"> para cada personagem.
-            character.results.map(personagem => personagens.innerHTML += `
+            character.results.forEach(personagem => personagens.innerHTML += `
             <li>${personagem.name}</li>
             `);
-            //console.log(characteres)
         }
 
         function criarListaDeEpisodios(episodes) {
             // Criar um elemento <li class="list-group-item"> para cada episódio.
-            episodes.results.map(episodio => episodios.innerHTML += `
-            <li>${episodio.name}</li>
-            `);
+            episodios.innerHTML = episodes.results.map(episodio => `
+            <li>${episodio.episode} - ${episodio.name}</li>
+            `).join('');
         }
+
+        function clickPaginacao(botao, event) {
+            requererTodosEpisodios(botao.url)
+            console.log(event)
+        }  
 
     </script>
 
-    
+
 </body>
 
 </html>
