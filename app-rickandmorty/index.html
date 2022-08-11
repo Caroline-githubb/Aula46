@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesa de trabalho - JavaScript: Comunicação com Servidor 1/2</title>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <article>
+                    <h1>Rick and Morty</h1>
+                    <h2>Personagens</h2>
+                    <ul id="personagens" class="list-group-item"></ul>
+                    <h2>Episodio</h2>
+                    <li id="episodios" class="list-group-item"></li>
+                </article>
+            </div>
+        </div>
+    </div>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          <li class="page-item"><a class="page-link" href="https://rickandmortyapi.com/api/character/?page=2">1</a></li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+      </nav>
+    
+
+    <script type="text/javascript">
+        // Implemente a comunicação com servidor via HTTP
+        // Method GET
+
+        // https://rickandmortyapi.com/api/character
+        
+        requererTodosPersonagens();
+        requererTodosEpisodios();
+
+        async function requererTodosPersonagens() {
+            let respostaPersonagem = await fetch('https://rickandmortyapi.com/api/character');
+
+            let respostaJSON = await respostaPersonagem.json();
+
+            criarListaDePersonagens(respostaJSON);
+        }
+
+        // https://rickandmortyapi.com/api/character
+        async function requererTodosEpisodios() {
+            let respostaEpisodio = await fetch('https://rickandmortyapi.com/api/episode');
+
+            let respostaJSON = await respostaEpisodio.json();
+
+            criarListaDeEpisodios(respostaJSON);
+        }
+
+        // Funções que deverão ser executadas a partir da resposta do servidor
+        function criarListaDePersonagens(character) {
+            // Criar um elemento <li class="list-group-item"> para cada personagem.
+            character.results.map(personagem => personagens.innerHTML += `
+            <li>${personagem.name}</li>
+            `);
+            //console.log(characteres)
+        }
+
+        function criarListaDeEpisodios(episodes) {
+            // Criar um elemento <li class="list-group-item"> para cada episódio.
+            episodes.results.map(episodio => episodios.innerHTML += `
+            <li>${episodio.name}</li>
+            `);
+        }
+
+    </script>
+
+    
+</body>
+
+</html>
